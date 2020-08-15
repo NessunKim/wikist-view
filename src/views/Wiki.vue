@@ -1,5 +1,5 @@
 <template>
-  <div class="wiki">
+  <div class="page wiki">
     <h1>{{ article.fullTitle }}</h1>
     <div v-html="article.html" />
   </div>
