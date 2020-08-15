@@ -1,6 +1,8 @@
 <template>
   <div class="page login">
-    <button @click="facebookLogin">Login with Facebook</button>
+    <button class="uk-button uk-button-default" @click="facebookLogin">
+      Login with Facebook
+    </button>
   </div>
 </template>
 

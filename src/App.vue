@@ -1,19 +1,32 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <div class="uk-box-shadow-small" uk-sticky>
+      <navbar />
+    </div>
+    <div class="uk-container uk-padding">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
-
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import HelloWorld from "./components/HelloWorld.vue";
+import { defineComponent } from "vue";
+import Navbar from "@/components/Navbar.vue";
 
-@Options({
+export default defineComponent({
   components: {
-    HelloWorld
+    Navbar
   }
-})
-export default class App extends Vue {}
+});
 </script>
+<style lang="scss">
+// 1. Custom variables and variable overwrites.
 
-<style lang="scss"></style>
+// 2. Import default variables and available mixins.
+@import "uikit/src/scss/variables-theme.scss";
+@import "uikit/src/scss/mixins-theme.scss";
+
+// 3. Custom mixin overwrites.
+
+// 4. Import UIkit.
+@import "uikit/src/scss/uikit-theme.scss";
+</style>
