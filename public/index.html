@@ -17,7 +17,7 @@
   <script>
     window.fbAsyncInit = function () {
       FB.init({
-        appId: '',
+        appId: "<%= process.env.VUE_APP_FACEBOOK_APP_ID %>",
         cookie: true,
         xfbml: true,
         version: 'v8.0'
