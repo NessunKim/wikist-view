@@ -23,7 +23,7 @@ export default defineComponent({
       const { data } = await request.get(
         `articles/${currentRoute.value.params.fullTitle}`
       );
-      article.fullTitle = data.result.full_title;
+      article.fullTitle = data.result.fullTitle;
       article.html = data.result.html;
     });
 

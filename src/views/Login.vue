@@ -22,13 +22,15 @@ const useFacebookLogin = () => {
     window.FB.login(
       async response => {
         if (response.status === "connected") {
-          console.log("OK");
-          console.log(response.authResponse);
           const { data } = await request.post("auth/facebook", {
             accessToken: response.authResponse.accessToken,
             userId: response.authResponse.userID
           });
           console.log(data);
+          window.localStorage.setItem(
+            "auth.refreshToken",
+            data.result.refreshToken
+          );
         } else {
           console.log("Failed");
         }
