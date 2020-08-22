@@ -21,7 +21,7 @@ export default defineComponent({
 
     onMounted(async () => {
       const { data } = await request.get(
-        `articles/${currentRoute.value.params.fullTitle}`
+        `articles/${currentRoute.value.params.fullTitle}?fields[]=html`
       );
       article.fullTitle = data.result.fullTitle;
       article.html = data.result.html;
