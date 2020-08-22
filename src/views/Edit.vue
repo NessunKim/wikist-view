@@ -1,10 +1,11 @@
 <template>
   <div class="page wiki">
-    <h1>{{ article.fullTitle }}</h1>
+    <h1>{{ state.article.fullTitle }}</h1>
+    <tool-links :fullTitle="state.article.fullTitle" />
     <form>
       <fieldset class="uk-fieldset">
         <textarea
-          v-model="article.wikitext"
+          v-model="state.article.wikitext"
           class="uk-textarea"
           rows="10"
         ></textarea>
@@ -16,7 +17,7 @@
       </button>
       <router-link
         class="uk-button uk-button-danger"
-        :to="`/wiki/${article.fullTitle}`"
+        :to="`/wiki/${state.article.fullTitle}`"
       >
         Cancel
       </router-link>
@@ -25,36 +26,58 @@
 </template>
 
 <script lang="ts">
+import ToolLinks from "@/components/ToolLinks.vue";
 import { request } from "@/utils/request";
 import { reactive, onMounted, defineComponent } from "vue";
 import router from "@/router";
 
 export default defineComponent({
+  components: {
+    ToolLinks
+  },
   setup() {
     const { currentRoute } = router;
 
-    const article = reactive({
-      fullTitle: "",
-      wikitext: ""
+    const state = reactive({
+      article: {
+        fullTitle: "",
+        wikitext: ""
+      },
+      isNew: false
     });
 
     const save = async () => {
-      await request.put(`articles/${article.fullTitle}`, {
-        wikitext: article.wikitext
-      });
-      router.push(`/wiki/${article.fullTitle}`);
+      if (state.isNew) {
+        await request.post(`articles`, {
+          fullTitle: state.article.fullTitle,
+          wikitext: state.article.wikitext
+        });
+      } else {
+        await request.put(`articles/${state.article.fullTitle}`, {
+          wikitext: state.article.wikitext
+        });
+      }
+      router.push(`/wiki/${state.article.fullTitle}`);
     };
 
     onMounted(async () => {
-      const { data } = await request.get(
-        `articles/${currentRoute.value.params.fullTitle}?fields[]=wikitext`
-      );
-      article.fullTitle = data.result.fullTitle;
-      article.wikitext = data.result.wikitext;
+      try {
+        const { data } = await request.get(
+          `articles/${currentRoute.value.params.fullTitle}?fields[]=wikitext`
+        );
+        state.article.fullTitle = data.result.fullTitle;
+        state.article.wikitext = data.result.wikitext;
+      } catch (error) {
+        if (error.response.status === 404) {
+          state.article.fullTitle = currentRoute.value.params
+            .fullTitle as string;
+          state.isNew = true;
+        }
+      }
     });
 
     return {
-      article,
+      state,
       save
     };
   }
