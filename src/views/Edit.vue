@@ -1,14 +1,22 @@
 <template>
-  <div class="page wiki">
+  <div class="page edit">
     <h1>{{ state.article.fullTitle }}</h1>
     <tool-links :fullTitle="state.article.fullTitle" />
     <form>
       <fieldset class="uk-fieldset">
         <textarea
-          v-model="state.article.wikitext"
+          v-model="state.form.wikitext"
           class="uk-textarea"
           rows="10"
         ></textarea>
+        <div class="uk-margin">
+          <input
+            v-model="state.form.comment"
+            class="uk-input"
+            type="text"
+            placeholder="Comment"
+          />
+        </div>
       </fieldset>
     </form>
     <p class="uk-flex uk-flex-between" uk-margin>
@@ -40,8 +48,11 @@ export default defineComponent({
 
     const state = reactive({
       article: {
-        fullTitle: "",
-        wikitext: ""
+        fullTitle: ""
+      },
+      form: {
+        wikitext: "",
+        comment: ""
       },
       isNew: false
     });
@@ -50,11 +61,13 @@ export default defineComponent({
       if (state.isNew) {
         await request.post(`articles`, {
           fullTitle: state.article.fullTitle,
-          wikitext: state.article.wikitext
+          wikitext: state.form.wikitext,
+          comment: state.form.comment
         });
       } else {
         await request.put(`articles/${state.article.fullTitle}`, {
-          wikitext: state.article.wikitext
+          wikitext: state.form.wikitext,
+          comment: state.form.comment
         });
       }
       router.push(`/wiki/${state.article.fullTitle}`);
@@ -68,7 +81,7 @@ export default defineComponent({
           `articles/${currentRoute.value.params.fullTitle}?fields[]=wikitext`
         );
         state.article.fullTitle = article.fullTitle;
-        state.article.wikitext = article.wikitext;
+        state.form.wikitext = article.wikitext;
       } catch (error) {
         if (error.response.status === 404) {
           state.article.fullTitle = currentRoute.value.params

@@ -1,10 +1,17 @@
 <template>
-  <div class="page wiki">
+  <div class="page history">
     <h1>{{ state.article.fullTitle }}</h1>
     <tool-links :fullTitle="state.article.fullTitle" />
-    <div v-for="rev in state.revisions" :key="rev.id">
-      {{ rev.createdAt.format("llll") }}
-    </div>
+    <ul>
+      <li v-for="rev in state.revisions" :key="rev.id">
+        <span class="created-at">
+          {{ rev.createdAt.format("llll") }}
+        </span>
+        <span class="comment">
+          {{ rev.comment }}
+        </span>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -40,9 +47,10 @@ export default defineComponent({
       console.log(revisions);
       revisions.reverse();
       state.revisions = revisions.map(
-        (rev: { id: number; createdAt: string }) => ({
+        (rev: { id: number; comment: string; createdAt: string }) => ({
           id: rev.id,
-          createdAt: moment(rev.createdAt)
+          createdAt: moment(rev.createdAt),
+          comment: rev.comment
         })
       );
     });
@@ -53,3 +61,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="scss" scoped>
+.comment {
+  margin-left: 0.5em;
+}
+</style>
