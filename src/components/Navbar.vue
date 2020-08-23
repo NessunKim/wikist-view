@@ -8,6 +8,17 @@
           </li>
         </router-link>
       </ul>
+      <div class="uk-navbar-item">
+        <form @submit.prevent="search" class="uk-search uk-search-navbar">
+          <button uk-search-icon @click="search"></button>
+          <input
+            class="uk-search-input"
+            type="text"
+            placeholder="Search..."
+            v-model="state.searchInput"
+          />
+        </form>
+      </div>
     </div>
     <div class="uk-navbar-right">
       <ul class="uk-navbar-nav">
@@ -20,3 +31,27 @@
     </div>
   </nav>
 </template>
+
+<script lang="ts">
+import { reactive, defineComponent } from "vue";
+import router from "@/router";
+
+const useSearch = () => {
+  const state = reactive({
+    searchInput: ""
+  });
+  const search = (e: Event) => {
+    console.log(e);
+    router.push(`/wiki/${state.searchInput}`);
+  };
+  return { search, state };
+};
+
+export default defineComponent({
+  setup() {
+    return {
+      ...useSearch()
+    };
+  }
+});
+</script>
