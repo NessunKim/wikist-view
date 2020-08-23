@@ -1,31 +1,33 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 
+const baseURL = process.env.VUE_APP_BASE_URL;
+
 async function tokenRefresh() {
   try {
-    const refreshToken = localStorage.getItem("refreshToken");
+    const refreshToken = localStorage.getItem("auth.refreshToken");
     const { data } = await axios({
-      url: `auth/refresh`,
+      url: `${baseURL}/auth/refresh`,
       method: "post",
       data: {
         refreshToken
       }
     });
-    localStorage.setItem("accessToken", data.data.accessToken);
-    localStorage.setItem("refreshToken", data.data.refreshToken);
+    localStorage.setItem("auth.accessToken", data.data.accessToken);
+    localStorage.setItem("auth.refreshToken", data.data.refreshToken);
     return {
       token: data.data.accessToken,
       refreshToken: data.data.refreshToken
     };
   } catch (err) {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("auth.accessToken");
+    localStorage.removeItem("auth.refreshToken");
     throw err;
   }
 }
 
 const request = axios.create({
-  baseURL: "http://localhost:8088"
+  baseURL
 });
 
 interface Claims {
