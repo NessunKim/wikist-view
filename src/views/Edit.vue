@@ -62,11 +62,13 @@ export default defineComponent({
 
     onMounted(async () => {
       try {
-        const { data } = await request.get(
+        const {
+          data: { data: article }
+        } = await request.get(
           `articles/${currentRoute.value.params.fullTitle}?fields[]=wikitext`
         );
-        state.article.fullTitle = data.result.fullTitle;
-        state.article.wikitext = data.result.wikitext;
+        state.article.fullTitle = article.fullTitle;
+        state.article.wikitext = article.wikitext;
       } catch (error) {
         if (error.response.status === 404) {
           state.article.fullTitle = currentRoute.value.params

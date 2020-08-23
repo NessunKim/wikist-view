@@ -6,6 +6,12 @@
     <router-link class="uk-button uk-button-default" :to="`/edit/${fullTitle}`">
       Edit
     </router-link>
+    <router-link
+      class="uk-button uk-button-default"
+      :to="`/history/${fullTitle}`"
+    >
+      History
+    </router-link>
   </p>
 </template>
 

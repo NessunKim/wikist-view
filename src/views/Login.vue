@@ -29,7 +29,7 @@ const useFacebookLogin = () => {
           console.log(data);
           window.localStorage.setItem(
             "auth.refreshToken",
-            data.result.refreshToken
+            data.data.refreshToken
           );
         } else {
           console.log("Failed");

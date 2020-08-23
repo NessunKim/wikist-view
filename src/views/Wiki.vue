@@ -30,8 +30,8 @@ export default defineComponent({
       const { data } = await request.get(
         `articles/${currentRoute.value.params.fullTitle}?fields[]=html`
       );
-      state.article.fullTitle = data.result.fullTitle;
-      state.article.html = data.result.html;
+      state.article.fullTitle = data.data.fullTitle;
+      state.article.html = data.data.html;
     });
 
     return {
