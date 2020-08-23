@@ -16,9 +16,7 @@
 </template>
 
 <script lang="ts">
-import { request } from "@/utils/request";
-import { reactive, onMounted, defineComponent } from "vue";
-import router from "@/router";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
