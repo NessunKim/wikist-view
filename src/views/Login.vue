@@ -26,10 +26,13 @@ const useFacebookLogin = () => {
             accessToken: response.authResponse.accessToken,
             userId: response.authResponse.userID
           });
-          console.log(data);
           window.localStorage.setItem(
             "auth.refreshToken",
             data.data.refreshToken
+          );
+          window.localStorage.setItem(
+            "auth.accessToken",
+            data.data.accessToken
           );
         } else {
           console.log("Failed");
