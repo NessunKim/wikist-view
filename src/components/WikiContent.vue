@@ -13,7 +13,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-::v-deep p {
+::v-deep(p) {
   overflow-wrap: break-word;
 }
 </style>

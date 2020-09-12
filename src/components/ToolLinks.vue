@@ -8,6 +8,12 @@
     </router-link>
     <router-link
       class="uk-button uk-button-default"
+      :to="`/delete/${fullTitle}`"
+    >
+      Delete
+    </router-link>
+    <router-link
+      class="uk-button uk-button-default"
       :to="`/history/${fullTitle}`"
     >
       History
