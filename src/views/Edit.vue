@@ -36,7 +36,7 @@
 <script lang="ts">
 import ToolLinks from "@/components/ToolLinks.vue";
 import { request } from "@/utils/request";
-import { reactive, onMounted, defineComponent } from "vue";
+import { reactive, onMounted, defineComponent, watch } from "vue";
 import router from "@/router";
 
 export default defineComponent({
@@ -73,7 +73,12 @@ export default defineComponent({
       router.push(`/wiki/${state.article.fullTitle}`);
     };
 
-    onMounted(async () => {
+    const loadData = async () => {
+      state.article.fullTitle = currentRoute.value.params.fullTitle as string;
+      state.form.wikitext = "";
+      state.form.comment = "";
+      state.isNew = false;
+
       try {
         const {
           data: { data: article }
@@ -84,12 +89,13 @@ export default defineComponent({
         state.form.wikitext = article.wikitext;
       } catch (error) {
         if (error.response.status === 404) {
-          state.article.fullTitle = currentRoute.value.params
-            .fullTitle as string;
           state.isNew = true;
         }
       }
-    });
+    };
+
+    onMounted(loadData);
+    watch(currentRoute, loadData);
 
     return {
       state,

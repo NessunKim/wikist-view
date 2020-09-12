@@ -29,31 +29,32 @@ export default defineComponent({
     const { currentRoute } = router;
 
     const state = reactive({
-      error: "",
       article: {
         fullTitle: "",
         html: ""
-      }
+      },
+      error: ""
     });
 
     const loadData = async () => {
+      state.article.fullTitle = currentRoute.value.params.fullTitle as string;
+      state.article.html = "";
+      state.error = "";
+
       try {
-        state.error = "";
         const { data } = await request.get(
           `articles/${currentRoute.value.params.fullTitle}?fields[]=html`
         );
         state.article.fullTitle = data.data.fullTitle;
         state.article.html = data.data.html;
-      } catch (err) {
-        state.article.fullTitle = currentRoute.value.params.fullTitle as string;
-        if (err.response.status === 404) {
+      } catch (error) {
+        if (error.response.status === 404) {
           state.error = "ARTICLE_NOT_FOUND";
         }
       }
     };
 
     onMounted(loadData);
-
     watch(currentRoute, loadData);
 
     return {

@@ -2,6 +2,12 @@
   <div class="page delete">
     <h1>{{ state.article.fullTitle }}</h1>
     <tool-links :fullTitle="state.article.fullTitle" />
+    <div
+      class="error-article-not-found"
+      v-if="state.error === 'ARTICLE_NOT_FOUND'"
+    >
+      Could not find the article "{{ state.article.fullTitle }}".
+    </div>
     <form>
       <fieldset class="uk-fieldset">
         <div class="uk-margin">
@@ -31,7 +37,7 @@
 <script lang="ts">
 import ToolLinks from "@/components/ToolLinks.vue";
 import { request } from "@/utils/request";
-import { reactive, onMounted, defineComponent } from "vue";
+import { reactive, onMounted, defineComponent, watch } from "vue";
 import router from "@/router";
 
 export default defineComponent({
@@ -47,7 +53,8 @@ export default defineComponent({
       },
       form: {
         comment: ""
-      }
+      },
+      error: ""
     });
 
     const save = async () => {
@@ -59,7 +66,11 @@ export default defineComponent({
       router.push(`/wiki/${state.article.fullTitle}`);
     };
 
-    onMounted(async () => {
+    const loadData = async () => {
+      state.article.fullTitle = currentRoute.value.params.fullTitle as string;
+      state.form.comment = "";
+      state.error = "";
+
       try {
         const {
           data: { data: article }
@@ -69,11 +80,13 @@ export default defineComponent({
         state.article.fullTitle = article.fullTitle;
       } catch (error) {
         if (error.response.status === 404) {
-          state.article.fullTitle = currentRoute.value.params
-            .fullTitle as string;
+          state.error = "ARTICLE_NOT_FOUND";
         }
       }
-    });
+    };
+
+    onMounted(loadData);
+    watch(currentRoute, loadData);
 
     return {
       state,
