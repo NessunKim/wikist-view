@@ -1,6 +1,11 @@
+import component from "*.vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
+  {
+    path: "/",
+    redirect: "/wiki/title"
+  },
   {
     path: "/wiki/:fullTitle",
     name: "Wiki",
@@ -28,6 +33,14 @@ const routes: Array<RouteRecordRaw> = [
     name: "Login",
     component: () =>
       import(/* webpackChunkName: "login" */ "../views/Login.vue")
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "PageNotFound",
+    component: () =>
+      import(
+        /* webpackChunkName: "page-not-found" */ "../views/PageNotFound.vue"
+      )
   }
 ];
 
